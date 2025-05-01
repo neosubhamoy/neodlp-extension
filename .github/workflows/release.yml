@@ -11,24 +11,19 @@ jobs:
     - name: 🚚 Checkout repository
       uses: actions/checkout@v4
 
-    - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 10
-
     - name: 📦 Setup node
       uses: actions/setup-node@v4
       with:
         node-version: 'lts/*'
-        cache: 'pnpm'
+        cache: 'npm'
 
     - name: 🛠️ Install dependencies
-      run: pnpm install
+      run: npm install
 
     - name: 🤐 Zip extensions
       run: |
-        pnpm zip
-        pnpm zip:firefox
+        npm run zip
+        npm run zip:firefox
 
     - name: ✨ Extract version number
       id: extract_version
