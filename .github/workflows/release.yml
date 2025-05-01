@@ -1,0 +1,90 @@
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  
+name: 🚀 Release on GitHub
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: 📦 Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+        cache: 'pnpm'
+
+    - name: 🛠️ Install dependencies
+      run: pnpm install
+
+    - name: 🤐 Zip extensions
+      run: |
+        pnpm zip
+        pnpm zip:firefox
+
+    - name: ✨ Extract version number
+      id: extract_version
+      run: |
+        VERSION_NUM=$(echo "${{ github.ref_name }}" | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+)(-.*)?$/\1/')
+        echo "version=$VERSION_NUM" >> $GITHUB_ENV
+
+    - name: 📄 Read and process changelog
+      id: changelog
+      shell: bash
+      run: |
+        if [ -f CHANGELOG.md ]; then
+          # Read and replace placeholders
+          CONTENT=$(cat CHANGELOG.md)
+          CONTENT=${CONTENT//<release_tag>/${{ github.ref_name }}}
+          CONTENT=${CONTENT//<version>/${{ env.version }}}
+        
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Also save to a processed file for later use
+          echo "$CONTENT" > CHANGELOG_PROCESSED.md
+        else
+          echo "content=No changelog found" >> $GITHUB_OUTPUT
+          echo "No changelog found" > CHANGELOG_PROCESSED.md
+        fi
+
+    - name: 📝 Create latest.json
+      id: create_latest_json
+      shell: bash
+      run: |
+        # Create latest.json
+        cat > latest.json << EOF
+        {
+          "version": "${{env.version}}",
+          "notes": $(cat CHANGELOG_PROCESSED.md | jq -s -R .),
+          "browsers": {
+            "chrome": {
+              "url": "https://github.com/${{github.repository}}/releases/download/${{github.ref_name}}/${{github.event.repository.name}}-${{env.version}}-chrome.zip"
+            },
+            "firefox": {
+              "url": "https://github.com/${{github.repository}}/releases/download/${{github.ref_name}}/${{github.event.repository.name}}-${{env.version}}-firefox.zip"
+            }
+          }
+        }
+        EOF
+
+    - name: 🚀 Upload to github releases
+      uses: softprops/action-gh-release@v2
+      with:
+        name: ${{github.event.repository.name}}-${{github.ref_name}}
+        body_path: CHANGELOG_PROCESSED.md
+        files: |
+          .output/${{github.event.repository.name}}-${{env.version}}-chrome.zip
+          .output/${{github.event.repository.name}}-${{env.version}}-firefox.zip
+          .output/${{github.event.repository.name}}-${{env.version}}-sources.zip
+          latest.json
+        draft: false
+        prerelease: false
+        make_latest: true
