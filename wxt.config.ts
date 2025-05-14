@@ -26,7 +26,7 @@ export default defineConfig({
     if (browser === 'chrome') {
       return {
         ...manifest,
-        key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx3XQoL6Qur86lyfRRGYiQ544w9fxJiStWvFJaNqqSlRxkoT0wj8mFVwBjtmUJC6AB31Zb9awELVk1jyo83cPoJjhydHQfk7dpQ3gygp5TdZMjwX5++FpYq5QIV1qyf9BNvGbWG1zHDPqRGC/ZtGaxb9FJyYoFMIUKoiJfuPwup0Iy3dRwJex4mxMobQnFtfoxdMRvjx6XA9v7Fz8QF1t/1lVsx9yOiJPyDDzygrVLR3+r+1Sq7CunK0CWMVPkTRMw243KMZBIDpxrjXaVbasIkZsMwVW0vkqIMXzMZGhUPu1SfflwanAJ5F2Yl0dcO3OxKLYL7szTtLJUD/7PFA2PwIDAQAB",
+        key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAntUIxtZKYDil4qeQzS0anabCsEd/cUTR5gf9xShEXob54sSnbkUfG2+8m2XpZA4E0ATSOqUkEIG5t1nBPRdxWYoBQ6NfoW6MNyZFFwte9aoqfSiA8PiuYrtujYOEExtLl+WyU/eY45ufYrMqWHyuhb4KrPuRyHGO/xcn6boHlP5DAVPwbCLALlXswNRwHvtZUJgVUJkUt8LE3LkX8RGn5sN0+jJtrocXq6byOq/RzDCC22fdbVXxYLDAg3+pwlyx2/po3EhMnG6E3vkcqlpIuGUVcVxcjMZq9nAMLDtiArgQXLvvKaTzFJ7C1iacTIYh8soqRHGXh0vaaRK4ttuSQQIDAQAB",
         commands: {
           _execute_action: {
             suggested_key: {
