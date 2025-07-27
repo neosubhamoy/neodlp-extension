@@ -15,7 +15,11 @@ import { useTheme } from "@/components/theme-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const downloadFormSchema = z.object({
-    url: z.string().min(1, { message: "URL is required" }).url({message: "Invalid URL format." }),
+    url: z.url({
+        error: (issue) => issue.input === undefined || issue.input === null || issue.input === ""
+        ? "URL is required"
+        : "Invalid URL format"
+    }),
 });
 
 export default function HomePage() {
