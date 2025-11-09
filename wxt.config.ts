@@ -33,8 +33,8 @@ export default defineConfig({
               default: "Alt+Shift+N",
             }
           },
-          "neodlp:quick-download": {
-            description: "Quick Download",
+          "neodlp:quick-search": {
+            description: "Quick Search",
             suggested_key: {
               default: "Alt+Shift+Q"
             }
@@ -55,8 +55,8 @@ export default defineConfig({
               default: "Alt+Shift+N",
             }
           },
-          "neodlp:quick-download": {
-            description: "Quick Download",
+          "neodlp:quick-search": {
+            description: "Quick Search",
             suggested_key: {
               default: "Alt+Shift+Q"
             }
@@ -72,8 +72,8 @@ export default defineConfig({
               default: "Alt+Shift+N",
             }
           },
-          "neodlp:quick-download": {
-            description: "Quick Download",
+          "neodlp:quick-search": {
+            description: "Quick Search",
             suggested_key: {
               default: "Alt+Shift+Q"
             }

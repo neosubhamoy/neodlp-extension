@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Download, Loader2, LucideIcon, Monitor, Moon, Sun } from "lucide-react";
+import { AlertCircle, Loader2, LucideIcon, Monitor, Moon, Search, Sun } from "lucide-react";
 import { type Browser } from 'wxt/browser';
 import { Textarea } from "@/components/ui/textarea";
 import { z } from "zod";
@@ -16,7 +16,7 @@ import { useTheme } from "@/components/theme-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
-const downloadFormSchema = z.object({
+const searchFormSchema = z.object({
     url: z.url({
         error: (issue) => issue.input === undefined || issue.input === null || issue.input === ""
         ? "URL is required"
@@ -26,7 +26,7 @@ const downloadFormSchema = z.object({
 
 export default function HomePage() {
     const { setTheme } = useTheme();
-    const [isDownloading, setIsDownloading] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
     const [isLoadingSettings, setIsLoadingSettings] = useState(true);
     const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
     const [showNotRunningAlert, setShowNotRunningAlert] = useState(false);
@@ -42,17 +42,17 @@ export default function HomePage() {
         { value: 'system', icon: Monitor, label: 'System' },
     ];
 
-    const downloadForm = useForm<z.infer<typeof downloadFormSchema>>({
-        resolver: zodResolver(downloadFormSchema),
+    const searchForm = useForm<z.infer<typeof searchFormSchema>>({
+        resolver: zodResolver(searchFormSchema),
         defaultValues: {
           url: '',
         },
         mode: "onChange",
     });
-    const watchedUrl = downloadForm.watch("url");
+    const watchedUrl = searchForm.watch("url");
 
-    const handleDownload = async (url?: string) => {
-        setIsDownloading(true);
+    const handleSearch = async (url?: string) => {
+        setIsSearching(true);
         setShowNotRunningAlert(false); // Reset alert status at the beginning
         
         // Create a timeout reference with undefined type
@@ -85,7 +85,7 @@ export default function HomePage() {
                 console.log('Response from background script:', response);
             }
         } catch (error) {
-            console.error("Download failed", error);
+            console.error("Search failed", error);
             
             // Check if this was a timeout error
             if (error instanceof Error && error.message === 'TIMEOUT') {
@@ -95,12 +95,12 @@ export default function HomePage() {
             // Clear the timeout if it was some other error
             if (timeoutId) clearTimeout(timeoutId);
         } finally {
-            setIsDownloading(false);
+            setIsSearching(false);
         }
     };
 
-    const handleDownloadSubmit = async (values: z.infer<typeof downloadFormSchema>) => {
-        await handleDownload(values.url);
+    const handleSearchSubmit = async (values: z.infer<typeof searchFormSchema>) => {
+        await handleSearch(values.url);
     }
 
     const saveSettings = async <K extends keyof Settings>(key: K, value: Settings[K]) => {
@@ -171,8 +171,8 @@ export default function HomePage() {
             });
             const activeTab = tabs[0];
             if (activeTab && activeTab.url) {
-                downloadForm.setValue("url", activeTab.url);
-                await downloadForm.trigger("url");
+                searchForm.setValue("url", activeTab.url);
+                await searchForm.trigger("url");
             }
         }
         if (!isLoadingSettings && settings.autofill_url) {
@@ -187,8 +187,8 @@ export default function HomePage() {
             if (changeInfo.status === "complete") {
                 browser.tabs.get(tabId).then(async (tab) => {
                     if (tab.active && tab.url) {
-                        downloadForm.setValue("url", tab.url);
-                        await downloadForm.trigger("url");
+                        searchForm.setValue("url", tab.url);
+                        await searchForm.trigger("url");
                     }
                 });
             }
@@ -236,12 +236,12 @@ export default function HomePage() {
                 />
                 <Label htmlFor="autofill-url">AutoFill Page URL</Label>
             </div>
-            <Form {...downloadForm}>
-                <form onSubmit={downloadForm.handleSubmit(handleDownloadSubmit)} className="flex flex-col gap-4 w-full" autoComplete="off">
+            <Form {...searchForm}>
+                <form onSubmit={searchForm.handleSubmit(handleSearchSubmit)} className="flex flex-col gap-4 w-full" autoComplete="off">
                     <FormField
-                        control={downloadForm.control}
+                        control={searchForm.control}
                         name="url"
-                        disabled={isDownloading || isLoadingSettings || isUpdatingSettings}
+                        disabled={isSearching || isLoadingSettings || isUpdatingSettings}
                         render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormControl>
@@ -265,16 +265,16 @@ export default function HomePage() {
                             </FormItem>
                         )}
                     />
-                    <Button className="w-full cursor-pointer" type="submit" disabled={isDownloading || isLoadingSettings || isUpdatingSettings || !watchedUrl || downloadForm.getFieldState("url").invalid}>
-                        {isDownloading ? (
+                    <Button className="w-full cursor-pointer" type="submit" disabled={isSearching || isLoadingSettings || isUpdatingSettings || !watchedUrl || searchForm.getFieldState("url").invalid}>
+                        {isSearching ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                Starting
+                                Initiating
                             </>
                         ) : (
                             <>
-                                <Download className="w-4 h-4" />
-                                Download
+                                <Search className="w-4 h-4" />
+                                Search
                             </>
                         )}
                     </Button>
@@ -285,12 +285,12 @@ export default function HomePage() {
                   OR
                 </span>
             </div>
-            <div className="quick-download-suggestion flex flex-col items-center justify-center space-y-2">
+            <div className="quick-search-suggestion flex flex-col items-center justify-center space-y-2">
                 <p className="text-sm flex items-center gap-2"><span className="">Use, Shortcut</span>
                 {
-                    shortcuts.find(cmd => cmd.name === "neodlp:quick-download")?.shortcut ? (
+                    shortcuts.find(cmd => cmd.name === "neodlp:quick-search")?.shortcut ? (
                         <KbdGroup>
-                            {shortcuts.find(cmd => cmd.name === "neodlp:quick-download")?.shortcut?.split('+').map((key, index, arr) => (
+                            {shortcuts.find(cmd => cmd.name === "neodlp:quick-search")?.shortcut?.split('+').map((key, index, arr) => (
                                 <span key={index} className="flex items-center">
                                     <Kbd>{formatKeySymbol(key.trim())}</Kbd>
                                     {index < arr.length - 1 && <span className="ml-1">+</span>}

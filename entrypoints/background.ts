@@ -35,13 +35,13 @@ export default defineBackground(() => {
 
   // Listen for the keyboard commands
   browser.commands.onCommand.addListener(async (command) => {
-    if (command === "neodlp:quick-download") {
+    if (command === "neodlp:quick-search") {
       try {
         const tabs = await browser.tabs.query({ active: true, currentWindow: true });
         const activeTab = tabs[0];
         
         if (activeTab && activeTab.url) {
-          console.log("Quick download triggered for URL:", activeTab.url);
+          console.log("Quick search triggered for URL:", activeTab.url);
           
           const response = await sendMessageToNativeHost({
             url: activeTab.url,
@@ -49,12 +49,12 @@ export default defineBackground(() => {
             argument: ''
           });
           
-          console.log("Quick download response:", response);
+          console.log("Quick search response:", response);
         } else {
-          console.error("No active tab or URL found for quick download");
+          console.error("No active tab or URL found for quick search");
         }
       } catch (error) {
-        console.error("Error in quick download:", error);
+        console.error("Error in quick search:", error);
       }
     }
   });
@@ -63,50 +63,50 @@ export default defineBackground(() => {
   browser.contextMenus.removeAll().then(() => {
     // Context menu for quick download
     browser.contextMenus.create({
-      id: "quick-download:page",
-      title: "Download with Neo Downloader Plus",
+      id: "quick-search:page",
+      title: "Search with Neo Downloader Plus",
       contexts: ["page"]
     });
 
     browser.contextMenus.create({
-      id: "quick-download:link",
-      title: "Download Link with Neo Downloader Plus",
+      id: "quick-search:link",
+      title: "Search with Neo Downloader Plus (Link)",
       contexts: ["link"]
     });
 
     browser.contextMenus.create({
-      id: "quick-download:media",
-      title: "Download Media with Neo Downloader Plus",
+      id: "quick-search:media",
+      title: "Search with Neo Downloader Plus (Media Source)",
       contexts: ["video", "audio"]
     });
 
     browser.contextMenus.create({
-      id: "quick-download:selection",
-      title: "Download Selection with Neo Downloader Plus",
+      id: "quick-search:selection",
+      title: "Search with Neo Downloader Plus (Selected Text)",
       contexts: ["selection"]
     });
   });
 
   browser.contextMenus.onClicked.addListener((info, tab) => {
     let url = '';
-    if (info.menuItemId === "quick-download:page") {
+    if (info.menuItemId === "quick-search:page") {
       if(!info.pageUrl) return;
       url = info.pageUrl;
-    } else if (info.menuItemId === "quick-download:link") {
+    } else if (info.menuItemId === "quick-search:link") {
       if(!info.linkUrl) return;
       url = info.linkUrl;
-    } else if (info.menuItemId === "quick-download:media") {
+    } else if (info.menuItemId === "quick-search:media") {
       if(!info.srcUrl) return;
       url = info.srcUrl;
-    } else if (info.menuItemId === "quick-download:selection") {
+    } else if (info.menuItemId === "quick-search:selection") {
       if(!info.selectionText) return;
       url = info.selectionText;
     }
     if (!url) return;
     sendMessageToNativeHost({url: url, command: 'download', argument: ''}).then(response => {
-      console.log("Context menu download response:", response);
+      console.log("Context menu search response:", response);
     }).catch(error => {
-      console.error("Error in context menu download:", error);
+      console.error("Error in context menu search:", error);
     });
   });
 });
