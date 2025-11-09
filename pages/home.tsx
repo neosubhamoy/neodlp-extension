@@ -11,8 +11,10 @@ import { Settings } from "@/types/settings";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { formatKeySymbol } from "@/utils";
 import { useTheme } from "@/components/theme-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
 const downloadFormSchema = z.object({
     url: z.url({
@@ -32,6 +34,7 @@ export default function HomePage() {
         theme: "system",
         autofill_url: true,
     });
+    const [shortcuts, setShortcuts] = useState<Browser.commands.Command[]>([]);
 
     const themeOptions: { value: 'system' | 'dark' | 'light'; icon: LucideIcon; label: string }[] = [
         { value: 'light', icon: Sun, label: 'Light' },
@@ -130,6 +133,13 @@ export default function HomePage() {
         }
     };
 
+    // Fetch all Commands when the component mounts
+    useEffect(() => {
+        browser.commands.getAll().then(commands => {
+            setShortcuts(commands);
+        }).catch(console.error);
+    }, []);
+
     // loading the settings from storage if available, overwriting the default values when the component mounts
     useEffect(() => {
         const loadSettings = async () => {
@@ -173,7 +183,7 @@ export default function HomePage() {
     // Listen for tab URL changes and update the form value accordingly (if autofill is enabled)
     useEffect(() => {
         if (isLoadingSettings || !settings.autofill_url) return;
-        const handleTabUrlChange = async (tabId: number, changeInfo: Browser.tabs.TabChangeInfo) => {
+        const handleTabUrlChange = async (tabId: number, changeInfo: Browser.tabs.OnUpdatedInfo) => {
             if (changeInfo.status === "complete") {
                 browser.tabs.get(tabId).then(async (tab) => {
                     if (tab.active && tab.url) {
@@ -270,6 +280,29 @@ export default function HomePage() {
                     </Button>
                 </form>
             </Form>
+            <div className="or-devider after:border-border relative text-center text-xs after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t mb-2">
+                <span className="bg-background text-muted-foreground relative z-10 px-2">
+                  OR
+                </span>
+            </div>
+            <div className="quick-download-suggestion flex flex-col items-center justify-center space-y-2">
+                <p className="text-sm flex items-center gap-2"><span className="">Use, Shortcut</span>
+                {
+                    shortcuts.find(cmd => cmd.name === "neodlp:quick-download")?.shortcut ? (
+                        <KbdGroup>
+                            {shortcuts.find(cmd => cmd.name === "neodlp:quick-download")?.shortcut?.split('+').map((key, index, arr) => (
+                                <span key={index} className="flex items-center">
+                                    <Kbd>{formatKeySymbol(key.trim())}</Kbd>
+                                    {index < arr.length - 1 && <span className="ml-1">+</span>}
+                                </span>
+                            ))}
+                        </KbdGroup>
+                    ) : (
+                        <Kbd>⚠️ Not Set</Kbd>
+                    )
+                }
+                </p>
+            </div>
         </div>
     )
 }
