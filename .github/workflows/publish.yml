@@ -1,7 +1,6 @@
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
 
 name: 🚀 Publish to Stores
 jobs:
@@ -27,8 +26,7 @@ jobs:
 
       - name: 🚀 Submit to stores
         run: |
-          npm run submit -- --dry-run \
-            --chrome-zip .output/*-chrome.zip \
+          npm run submit -- --chrome-zip .output/*-chrome.zip \
             --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
         env:
           CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
