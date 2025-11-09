@@ -1,6 +1,8 @@
 ### ✨ Changelog
 
-- initial MVP release v0.1.0
+- Added keyboard shortcut indication
+- Quick download is now renamed to quick search
+- Other minor fixes and improvements
 
 ### ⬇️ Download Section
 

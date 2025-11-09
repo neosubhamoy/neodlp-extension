@@ -20,7 +20,7 @@ export default defineConfig({
       name: "Neo Downloader Plus",
       description: "Neo Downloader Plus Browser Integration",
       homepage_url: "https://neodlp.neosubhamoy.com",
-      version: "0.1.0",
+      version: "0.1.1",
       permissions: ["tabs", "storage", "contextMenus", "nativeMessaging"],
     }
     if (browser === 'chrome') {
