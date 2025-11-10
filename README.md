@@ -6,7 +6,7 @@ NeoDLP (Neo Downloader Plus) Browser Integration
 [![github tag](https://img.shields.io/github/v/tag/neosubhamoy/neodlp-extension?color=yellow)](https://github.com/neosubhamoy/neodlp-extension)
 [![PRs](https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat)](https://github.com/neosubhamoy/neodlp-extension)
 
->[!TIP]
+> [!TIP]
 > **🥰 Liked this project? Please consider giving it a Star (🌟) on github to show us your appreciation and help the algorythm recommend this project to even more awesome people like you!**
 
 ## 📎 Pre-Requirements
@@ -65,7 +65,7 @@ npm run zip:firefox      # for production zip creation (firefox)
 ```
 5. Do the changes, Send a Pull Request with proper Description (NOTE: Pull Requests Without Proper Description will be Rejected)
 
-**⭕ Noticed any Bugs or Want to give us some suggetions? Always feel free to open a GitHub Issue. We would love to hear from you...!!**
+**⭕ Noticed any Bug or Want to give us some suggetions? Always feel free to open a GitHub Issue. We would love to hear from you...!!**
 
 ## 📝 License
 
