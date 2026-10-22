@@ -1,10 +1,10 @@
-### ✨ Changelog
+### Changelog
 
 - Added keyboard shortcut indication
 - Quick download is now renamed to quick search
 - Other minor fixes and improvements
 
-### ⬇️ Download Section
+### Download Section
 
 | Type | Chrome / Chromium base | Firefox base |
 | :---- | :---- | :---- |

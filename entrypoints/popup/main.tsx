@@ -1,21 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from '@/entrypoints/popup/App.tsx';
-import '@/entrypoints/popup/style.css';
-import { HashRouter, Routes, Route } from "react-router-dom";
-import RootLayout from '@/pages/layout/root';
-import HomePage from '@/pages/home';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "@/entrypoints/popup/style.css";
+import {
+	RouterProvider,
+	createHashHistory,
+	createRouter,
+} from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <HashRouter>
-      <App>
-        <Routes>
-          <Route path="/" element={<RootLayout />}>
-            <Route index element={<HomePage />} />
-          </Route>
-        </Routes>
-      </App>
-    </HashRouter>
-  </React.StrictMode>,
+const router = createRouter({
+	routeTree,
+	history: createHashHistory(),
+	defaultPreload: "intent",
+	scrollRestoration: true,
+});
+
+// Register things for typesafety
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: typeof router;
+	}
+}
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+	<React.StrictMode>
+		<RouterProvider router={router} />
+	</React.StrictMode>,
 );
