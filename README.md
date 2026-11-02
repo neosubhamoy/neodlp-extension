@@ -6,8 +6,8 @@ NeoDLP (Neo Downloader Plus) Browser Integration
 [![github stars](https://img.shields.io/github/stars/neosubhamoy/neodlp-extension?color=yellow&style=for-the-badge)](https://github.com/neosubhamoy/neodlp-extension/stargazers)
 [![github license](https://img.shields.io/github/license/neosubhamoy/neodlp-extension?color=blue&style=for-the-badge)](https://github.com/neosubhamoy/neodlp-extension/blob/main/LICENSE)
 
-> [!TIP]
-> **🥰 Liked this project? Please consider giving it a Star (🌟) on github to show us your appreciation and help the algorythm recommend this project to even more awesome people like you!**
+> [!WARNING]
+> This project is now moved to the base [neosubhamoy/neodlp](https://github.com/neosubhamoy/neodlp) repo (under `extension/` folder)
 
 ## Pre-Requirements
 
